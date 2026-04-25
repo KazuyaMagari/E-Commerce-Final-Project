@@ -30,7 +30,5 @@ app.get('/api/health', (req: Request, res: Response) => {
 // Error handling middleware
 app.use(errorHandler);
 
-// Start server
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});
+// Export the app for Vercel serverless deployment
+export default app;
