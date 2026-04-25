@@ -1,5 +1,7 @@
-import "dotenv/config";
-import { pool } from "../config/database";
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+require("dotenv/config");
+const database_1 = require("../config/database");
 const MOCK_PRODUCTS = [
     {
         name: "Wireless Headphones",
@@ -74,7 +76,7 @@ async function seedFirebase() {
     try {
         console.log("🚀 Starting data migration to PostgreSQL...");
         // Create tables if they don't exist
-        await pool.query(`
+        await database_1.pool.query(`
       CREATE TABLE IF NOT EXISTS products (
         id SERIAL PRIMARY KEY,
         name VARCHAR(255) NOT NULL,
@@ -88,7 +90,7 @@ async function seedFirebase() {
         updated_at TIMESTAMP DEFAULT NOW()
       )
     `);
-        await pool.query(`
+        await database_1.pool.query(`
       CREATE TABLE IF NOT EXISTS orders (
         id SERIAL PRIMARY KEY,
         user_id VARCHAR(255),
@@ -99,7 +101,7 @@ async function seedFirebase() {
         updated_at TIMESTAMP DEFAULT NOW()
       )
     `);
-        await pool.query(`
+        await database_1.pool.query(`
       CREATE TABLE IF NOT EXISTS order_items (
         id SERIAL PRIMARY KEY,
         order_id INTEGER REFERENCES orders(id),
@@ -110,7 +112,7 @@ async function seedFirebase() {
     `);
         // Insert mock products
         for (const product of MOCK_PRODUCTS) {
-            await pool.query('INSERT INTO products (name, description, price, image, category, stock, featured) VALUES ($1, $2, $3, $4, $5, $6, $7) ON CONFLICT DO NOTHING', [product.name, product.description, product.price, product.image, product.category, product.stock, product.featured]);
+            await database_1.pool.query('INSERT INTO products (name, description, price, image, category, stock, featured) VALUES ($1, $2, $3, $4, $5, $6, $7) ON CONFLICT DO NOTHING', [product.name, product.description, product.price, product.image, product.category, product.stock, product.featured]);
         }
         console.log("✅ Data migration completed successfully!");
     }
@@ -118,7 +120,7 @@ async function seedFirebase() {
         console.error("❌ Error during migration:", error);
     }
     finally {
-        await pool.end();
+        await database_1.pool.end();
     }
 }
 seedFirebase();

@@ -1,4 +1,7 @@
-export const errorHandler = (err, req, res, next) => {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.errorHandler = void 0;
+const errorHandler = (err, req, res, next) => {
     console.error(err);
     if (err.code === 'auth/invalid-token') {
         return res.status(401).json({ error: 'Invalid token' });
@@ -10,5 +13,6 @@ export const errorHandler = (err, req, res, next) => {
         error: err.message || 'Internal server error',
     });
 };
-export default errorHandler;
+exports.errorHandler = errorHandler;
+exports.default = exports.errorHandler;
 //# sourceMappingURL=errorHandler.js.map

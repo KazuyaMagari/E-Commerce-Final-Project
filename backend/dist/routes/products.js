@@ -1,10 +1,15 @@
-import express from 'express';
-import ProductController from '../controllers/ProductController';
-const router = express.Router();
-router.get('/', ProductController.getAll.bind(ProductController));
-router.get('/:id', ProductController.getById.bind(ProductController));
-router.post('/', ProductController.create.bind(ProductController));
-router.put('/:id', ProductController.update.bind(ProductController));
-router.delete('/:id', ProductController.delete.bind(ProductController));
-export default router;
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = __importDefault(require("express"));
+const ProductController_1 = __importDefault(require("../controllers/ProductController"));
+const router = express_1.default.Router();
+router.get('/', ProductController_1.default.getAll.bind(ProductController_1.default));
+router.get('/:id', ProductController_1.default.getById.bind(ProductController_1.default));
+router.post('/', ProductController_1.default.create.bind(ProductController_1.default));
+router.put('/:id', ProductController_1.default.update.bind(ProductController_1.default));
+router.delete('/:id', ProductController_1.default.delete.bind(ProductController_1.default));
+exports.default = router;
 //# sourceMappingURL=products.js.map

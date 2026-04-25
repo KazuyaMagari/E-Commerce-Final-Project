@@ -1,22 +1,27 @@
-import express from 'express';
-import cors from 'cors';
-import dotenv from 'dotenv';
-import productRoutes from './routes/products';
-import orderRoutes from './routes/orders';
-import errorHandler from './middleware/errorHandler';
-dotenv.config();
-const app = express();
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = __importDefault(require("express"));
+const cors_1 = __importDefault(require("cors"));
+const dotenv_1 = __importDefault(require("dotenv"));
+const products_1 = __importDefault(require("./routes/products"));
+const orders_1 = __importDefault(require("./routes/orders"));
+const errorHandler_1 = __importDefault(require("./middleware/errorHandler"));
+dotenv_1.default.config();
+const app = (0, express_1.default)();
 const PORT = process.env.PORT || 3000;
 // Middleware
-app.use(cors({
+app.use((0, cors_1.default)({
     origin: process.env.FRONTEND_URL || 'http://localhost:5173',
     credentials: true,
 }));
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express_1.default.json());
+app.use(express_1.default.urlencoded({ extended: true }));
 // Routes
-app.use('/api/v1/products', productRoutes);
-app.use('/api/v1/orders', orderRoutes);
+app.use('/api/v1/products', products_1.default);
+app.use('/api/v1/orders', orders_1.default);
 // Health check
 app.get('/api/health', (req, res) => {
     res.json({ status: 'OK' });
@@ -26,9 +31,9 @@ app.get('/', (req, res) => {
     res.json({ message: 'E-commerce API is running' });
 });
 // Error handling middleware
-app.use(errorHandler);
+app.use(errorHandler_1.default);
 // Export Express app for Vercel serverless deployment
-export default app;
+exports.default = app;
 // Avoid starting a listener inside a serverless runtime.
 if (!process.env.VERCEL) {
     app.listen(PORT, () => {

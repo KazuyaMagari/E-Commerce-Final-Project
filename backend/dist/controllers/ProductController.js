@@ -1,8 +1,14 @@
-import ProductService from '../services/ProductService';
-export class ProductController {
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.ProductController = void 0;
+const ProductService_1 = __importDefault(require("../services/ProductService"));
+class ProductController {
     async getAll(req, res, next) {
         try {
-            const products = await ProductService.getAllProducts();
+            const products = await ProductService_1.default.getAllProducts();
             const featured = req.query.featured === 'true';
             const filtered = featured ? products.filter(p => p.featured) : products;
             res.json(filtered);
@@ -13,7 +19,7 @@ export class ProductController {
     }
     async getById(req, res, next) {
         try {
-            const product = await ProductService.getProductById(req.params.id);
+            const product = await ProductService_1.default.getProductById(req.params.id);
             res.json(product);
         }
         catch (error) {
@@ -22,7 +28,7 @@ export class ProductController {
     }
     async create(req, res, next) {
         try {
-            const product = await ProductService.createProduct(req.body);
+            const product = await ProductService_1.default.createProduct(req.body);
             res.status(201).json(product);
         }
         catch (error) {
@@ -31,7 +37,7 @@ export class ProductController {
     }
     async update(req, res, next) {
         try {
-            const product = await ProductService.updateProduct(req.params.id, req.body);
+            const product = await ProductService_1.default.updateProduct(req.params.id, req.body);
             res.json(product);
         }
         catch (error) {
@@ -40,7 +46,7 @@ export class ProductController {
     }
     async delete(req, res, next) {
         try {
-            await ProductService.deleteProduct(req.params.id);
+            await ProductService_1.default.deleteProduct(req.params.id);
             res.status(204).send();
         }
         catch (error) {
@@ -48,5 +54,6 @@ export class ProductController {
         }
     }
 }
-export default new ProductController();
+exports.ProductController = ProductController;
+exports.default = new ProductController();
 //# sourceMappingURL=ProductController.js.map

@@ -1,10 +1,13 @@
-import { pool } from '../config/database';
-export class OrderService {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.OrderService = void 0;
+const database_1 = require("../config/database");
+class OrderService {
     async getAllOrders() {
-        const result = await pool.query('SELECT * FROM orders ORDER BY created_at DESC');
+        const result = await database_1.pool.query('SELECT * FROM orders ORDER BY created_at DESC');
         const orders = [];
         for (const row of result.rows) {
-            const itemsResult = await pool.query('SELECT * FROM order_items WHERE order_id = $1', [row.id]);
+            const itemsResult = await database_1.pool.query('SELECT * FROM order_items WHERE order_id = $1', [row.id]);
             const items = itemsResult.rows.map((item) => ({
                 productId: item.product_id,
                 quantity: item.quantity,
@@ -24,12 +27,12 @@ export class OrderService {
         return orders;
     }
     async getOrderById(id) {
-        const result = await pool.query('SELECT * FROM orders WHERE id = $1', [id]);
+        const result = await database_1.pool.query('SELECT * FROM orders WHERE id = $1', [id]);
         if (result.rows.length === 0) {
             throw { status: 404, message: 'Order not found' };
         }
         const row = result.rows[0];
-        const itemsResult = await pool.query('SELECT * FROM order_items WHERE order_id = $1', [id]);
+        const itemsResult = await database_1.pool.query('SELECT * FROM order_items WHERE order_id = $1', [id]);
         const items = itemsResult.rows.map((item) => ({
             productId: item.product_id,
             quantity: item.quantity,
@@ -48,7 +51,7 @@ export class OrderService {
     }
     async createOrder(data) {
         const { userId, items, totalPrice, status = 'pending', shippingAddress } = data;
-        const client = await pool.connect();
+        const client = await database_1.pool.connect();
         try {
             await client.query('BEGIN');
             const orderResult = await client.query('INSERT INTO orders (user_id, total_price, status, shipping_address, created_at, updated_at) VALUES ($1, $2, $3, $4, NOW(), NOW()) RETURNING *', [userId, totalPrice, status, shippingAddress]);
@@ -78,12 +81,13 @@ export class OrderService {
     }
     async updateOrder(id, data) {
         const { userId, totalPrice, status, shippingAddress } = data;
-        await pool.query('UPDATE orders SET user_id = $1, total_price = $2, status = $3, shipping_address = $4, updated_at = NOW() WHERE id = $5', [userId, totalPrice, status, shippingAddress, id]);
+        await database_1.pool.query('UPDATE orders SET user_id = $1, total_price = $2, status = $3, shipping_address = $4, updated_at = NOW() WHERE id = $5', [userId, totalPrice, status, shippingAddress, id]);
         return this.getOrderById(id);
     }
     async deleteOrder(id) {
-        await pool.query('DELETE FROM orders WHERE id = $1', [id]);
+        await database_1.pool.query('DELETE FROM orders WHERE id = $1', [id]);
     }
 }
-export default new OrderService();
+exports.OrderService = OrderService;
+exports.default = new OrderService();
 //# sourceMappingURL=OrderService.js.map
