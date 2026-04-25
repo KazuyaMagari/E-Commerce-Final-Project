@@ -27,12 +27,10 @@ app.get('/', (req, res) => {
 });
 // Error handling middleware
 app.use(errorHandler);
-// Export handler for Vercel serverless deployment
-export default (req, res) => {
-    return app(req, res);
-};
-// For local development
-if (process.env.NODE_ENV !== 'production') {
+// Export Express app for Vercel serverless deployment
+export default app;
+// Avoid starting a listener inside a serverless runtime.
+if (!process.env.VERCEL) {
     app.listen(PORT, () => {
         console.log(`Server is running on port ${PORT}`);
     });

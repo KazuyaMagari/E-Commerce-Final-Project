@@ -1,3 +1,4 @@
-declare const _default: (req: any, res: any) => any;
-export default _default;
+import { Express } from 'express';
+declare const app: Express;
+export default app;
 //# sourceMappingURL=index.d.ts.map
