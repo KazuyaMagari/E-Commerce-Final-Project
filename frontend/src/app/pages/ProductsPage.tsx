@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { ProductCard } from '../components/ProductCard';
-import { productsAPI } from '../data/mockData';
+import { Product } from '../types';
 import { Input } from '../components/ui/input';
 import { Button } from '../components/ui/button';
 import { Search } from 'lucide-react';
@@ -16,8 +16,25 @@ export function ProductsPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [category, setCategory] = useState('all');
   const [sortBy, setSortBy] = useState('name');
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const products = productsAPI.getAll();
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const response = await fetch('/api/v1/products');
+        if (!response.ok) throw new Error('Failed to fetch products');
+        const data = await response.json();
+        setProducts(data);
+      } catch (error) {
+        console.error('Error fetching products:', error);
+        setProducts([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchProducts();
+  }, []);
   const categories = ['all', ...Array.from(new Set(products.map((p) => p.category)))];
 
   // Filter and sort products
