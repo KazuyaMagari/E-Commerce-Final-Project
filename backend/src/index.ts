@@ -37,3 +37,10 @@ app.use(errorHandler);
 
 // Export the app for Vercel serverless deployment
 export default app;
+
+// For local development
+if (process.env.NODE_ENV !== 'production') {
+  app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
+  });
+}
