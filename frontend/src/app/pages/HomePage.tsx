@@ -1,12 +1,28 @@
 import { Link } from 'react-router';
+import { useEffect, useState } from 'react';
 import { ArrowRight, ShoppingBag, Truck, Shield, HeadphonesIcon } from 'lucide-react';
 import { Button } from '../components/ui/button';
 import { Card, CardContent } from '../components/ui/card';
 import { ProductCard } from '../components/ProductCard';
-import { productsAPI } from '../data/mockData';
+import { Product } from '../types';
 
 export function HomePage() {
-  const featuredProducts = productsAPI.getFeatured();
+  const [featuredProducts, setFeaturedProducts] = useState<Product[]>([]);
+
+  useEffect(() => {
+    const fetchFeaturedProducts = async () => {
+      try {
+        const response = await fetch('/api/v1/products?featured=true');
+        if (!response.ok) throw new Error('Failed to fetch featured products');
+        const data = await response.json();
+        setFeaturedProducts(data.slice(0, 4));
+      } catch (error) {
+        console.error('Error fetching featured products:', error);
+        setFeaturedProducts([]);
+      }
+    };
+    fetchFeaturedProducts();
+  }, []);
 
   return (
     <div className="flex flex-col">
