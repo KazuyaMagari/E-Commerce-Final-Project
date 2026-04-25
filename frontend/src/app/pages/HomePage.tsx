@@ -5,6 +5,7 @@ import { Button } from '../components/ui/button';
 import { Card, CardContent } from '../components/ui/card';
 import { ProductCard } from '../components/ProductCard';
 import { Product } from '../types';
+import { fetchProducts } from '../services/api';
 
 export function HomePage() {
   const [featuredProducts, setFeaturedProducts] = useState<Product[]>([]);
@@ -12,9 +13,7 @@ export function HomePage() {
   useEffect(() => {
     const fetchFeaturedProducts = async () => {
       try {
-        const response = await fetch('/api/v1/products?featured=true');
-        if (!response.ok) throw new Error('Failed to fetch featured products');
-        const data = await response.json();
+        const data = await fetchProducts();
         setFeaturedProducts(data.slice(0, 4));
       } catch (error) {
         console.error('Error fetching featured products:', error);

@@ -4,6 +4,7 @@ import { Product } from '../types';
 import { Input } from '../components/ui/input';
 import { Button } from '../components/ui/button';
 import { Search } from 'lucide-react';
+import { fetchProducts } from '../services/api';
 import {
   Select,
   SelectContent,
@@ -20,11 +21,9 @@ export function ProductsPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchProducts = async () => {
+    const loadProducts = async () => {
       try {
-        const response = await fetch('/api/v1/products');
-        if (!response.ok) throw new Error('Failed to fetch products');
-        const data = await response.json();
+        const data = await fetchProducts();
         setProducts(data);
       } catch (error) {
         console.error('Error fetching products:', error);
@@ -33,7 +32,7 @@ export function ProductsPage() {
         setLoading(false);
       }
     };
-    fetchProducts();
+    loadProducts();
   }, []);
   const categories = ['all', ...Array.from(new Set(products.map((p) => p.category)))];
 
