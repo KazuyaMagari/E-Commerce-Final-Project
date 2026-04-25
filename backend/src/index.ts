@@ -9,10 +9,19 @@ dotenv.config();
 
 const app: Express = express();
 const PORT = process.env.PORT || 3000;
+const normalizeOrigin = (value: string) => value.replace(/\/+$/, '');
+const frontendOrigin = normalizeOrigin(process.env.FRONTEND_URL || 'http://localhost:5173');
 
 // Middleware
 app.use(cors({
-  origin: process.env.FRONTEND_URL || 'http://localhost:5173',
+  origin: (origin, callback) => {
+    // Allow non-browser requests (no Origin header), and exact origin matches.
+    if (!origin || normalizeOrigin(origin) === frontendOrigin) {
+      callback(null, true);
+      return;
+    }
+    callback(new Error('Not allowed by CORS'));
+  },
   credentials: true,
 }));
 app.use(express.json());

@@ -12,9 +12,18 @@ const errorHandler_1 = __importDefault(require("./middleware/errorHandler"));
 dotenv_1.default.config();
 const app = (0, express_1.default)();
 const PORT = process.env.PORT || 3000;
+const normalizeOrigin = (value) => value.replace(/\/+$/, '');
+const frontendOrigin = normalizeOrigin(process.env.FRONTEND_URL || 'http://localhost:5173');
 // Middleware
 app.use((0, cors_1.default)({
-    origin: process.env.FRONTEND_URL || 'http://localhost:5173',
+    origin: (origin, callback) => {
+        // Allow non-browser requests (no Origin header), and exact origin matches.
+        if (!origin || normalizeOrigin(origin) === frontendOrigin) {
+            callback(null, true);
+            return;
+        }
+        callback(new Error('Not allowed by CORS'));
+    },
     credentials: true,
 }));
 app.use(express_1.default.json());
