@@ -35,8 +35,10 @@ app.get('/', (req: Request, res: Response) => {
 // Error handling middleware
 app.use(errorHandler);
 
-// Export the app for Vercel serverless deployment
-export default app;
+// Export handler for Vercel serverless deployment
+export default (req: any, res: any) => {
+  return app(req, res);
+};
 
 // For local development
 if (process.env.NODE_ENV !== 'production') {
