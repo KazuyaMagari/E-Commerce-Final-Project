@@ -27,6 +27,11 @@ app.get('/api/health', (req: Request, res: Response) => {
   res.json({ status: 'OK' });
 });
 
+// Root route
+app.get('/', (req: Request, res: Response) => {
+  res.json({ message: 'E-commerce API is running' });
+});
+
 // Error handling middleware
 app.use(errorHandler);
 
